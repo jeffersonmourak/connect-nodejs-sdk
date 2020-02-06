@@ -11,11 +11,11 @@
  * Swagger Codegen version: 2.3.0-SNAPSHOT
  *
  */
-var superagent = require('superagent');
-var querystring = require('querystring');
-var HeaderUtils = require('./lib/HeaderUtils');
+var superagent = require("superagent");
+var querystring = require("querystring");
+var HeaderUtils = require("./lib/HeaderUtils");
 
-  /**
+/**
  * @module ApiClient
  * @version 2.20200122.0
  */
@@ -33,15 +33,15 @@ var exports = function() {
    * @type {String}
    * @default https://connect.squareup.com
    */
-  this.basePath = 'https://connect.squareup.com'.replace(/\/+$/, '');
+  this.basePath = "https://connect.squareup.com".replace(/\/+$/, "");
 
   /**
    * The authentication methods to be included for all API calls.
    * @type {Array.<String>}
    */
-    this.authentications = {
-    'oauth2': {type: 'oauth2'},
-    'oauth2ClientSecret': {type: 'apiKey', 'in': 'header', name: 'Authorization'}
+  this.authentications = {
+    oauth2: { type: "oauth2" },
+    oauth2ClientSecret: { type: "apiKey", in: "header", name: "Authorization" }
   };
   /**
    * The default HTTP headers to be included for all API calls.
@@ -49,7 +49,7 @@ var exports = function() {
    * @default {}
    */
   this.defaultHeaders = {
-    'User-Agent': 'Square-Connect-Javascript/2.20200122.0'
+    "User-Agent": "Square-Connect-Javascript/2.20200122.0"
   };
   /**
    * The default HTTP timeout for all API calls.
@@ -77,10 +77,9 @@ var exports = function() {
    * Used to save and return cookies in a node.js (non-browser) setting,
    * if this.enableCookies is set to true.
    */
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     this.agent = new superagent.agent();
   }
-
 };
 
 /**
@@ -90,7 +89,7 @@ var exports = function() {
  */
 exports.prototype.paramToString = function(param) {
   if (param == undefined || param == null) {
-    return '';
+    return "";
   }
   if (param instanceof Date) {
     return param.toJSON();
@@ -107,7 +106,7 @@ exports.prototype.paramToString = function(param) {
  */
 exports.prototype.buildUrl = function(path, pathParams) {
   if (!path.match(/^\//)) {
-    path = '/' + path;
+    path = "/" + path;
   }
   var url = this.basePath + path;
   var _this = this;
@@ -135,7 +134,9 @@ exports.prototype.buildUrl = function(path, pathParams) {
  * @returns {Boolean} <code>true</code> if <code>contentType</code> represents JSON, otherwise <code>false</code>.
  */
 exports.prototype.isJsonMime = function(contentType) {
-  return Boolean(contentType != null && contentType.match(/^application\/json(;.*)?$/i));
+  return Boolean(
+    contentType != null && contentType.match(/^application\/json(;.*)?$/i)
+  );
 };
 
 /**
@@ -158,26 +159,16 @@ exports.prototype.jsonPreferredMime = function(contentTypes) {
  * @returns {Boolean} <code>true</code> if <code>param</code> represents a file.
  */
 exports.prototype.isFileParam = function(param) {
-  // fs.ReadStream in Node.js and Electron (but not in runtime like browserify)
-  if (typeof require === 'function') {
-    var fs;
-    try {
-      fs = require('fs');
-    } catch (err) {}
-    if (fs && fs.ReadStream && param instanceof fs.ReadStream) {
-      return true;
-    }
-  }
   // Buffer in Node.js
-  if (typeof Buffer === 'function' && param instanceof Buffer) {
+  if (typeof Buffer === "function" && param instanceof Buffer) {
     return true;
   }
   // Blob in browser
-  if (typeof Blob === 'function' && param instanceof Blob) {
+  if (typeof Blob === "function" && param instanceof Blob) {
     return true;
   }
   // File in browser (it seems File object is also instance of Blob, but keep this for safe)
-  if (typeof File === 'function' && param instanceof File) {
+  if (typeof File === "function" && param instanceof File) {
     return true;
   }
   return false;
@@ -196,7 +187,11 @@ exports.prototype.isFileParam = function(param) {
 exports.prototype.normalizeParams = function(params) {
   var newParams = {};
   for (var key in params) {
-    if (params.hasOwnProperty(key) && params[key] != undefined && params[key] != null) {
+    if (
+      params.hasOwnProperty(key) &&
+      params[key] != undefined &&
+      params[key] != null
+    ) {
       var value = params[key];
       if (this.isFileParam(value) || Array.isArray(value)) {
         newParams[key] = value;
@@ -218,27 +213,27 @@ exports.CollectionFormatEnum = {
    * Comma-separated values. Value: <code>csv</code>
    * @const
    */
-  CSV: ',',
+  CSV: ",",
   /**
    * Space-separated values. Value: <code>ssv</code>
    * @const
    */
-  SSV: ' ',
+  SSV: " ",
   /**
    * Tab-separated values. Value: <code>tsv</code>
    * @const
    */
-  TSV: '\t',
+  TSV: "\t",
   /**
    * Pipe(|)-separated values. Value: <code>pipes</code>
    * @const
    */
-  PIPES: '|',
+  PIPES: "|",
   /**
    * Native array. Value: <code>multi</code>
    * @const
    */
-  MULTI: 'multi'
+  MULTI: "multi"
 };
 
 /**
@@ -248,24 +243,27 @@ exports.CollectionFormatEnum = {
  * @returns {String|Array} A string representation of the supplied collection, using the specified delimiter. Returns
  * <code>param</code> as is if <code>collectionFormat</code> is <code>multi</code>.
  */
-exports.prototype.buildCollectionParam = function buildCollectionParam(param, collectionFormat) {
+exports.prototype.buildCollectionParam = function buildCollectionParam(
+  param,
+  collectionFormat
+) {
   if (param == null) {
     return null;
   }
   switch (collectionFormat) {
-    case 'csv':
-      return param.map(this.paramToString).join(',');
-    case 'ssv':
-      return param.map(this.paramToString).join(' ');
-    case 'tsv':
-      return param.map(this.paramToString).join('\t');
-    case 'pipes':
-      return param.map(this.paramToString).join('|');
-    case 'multi':
+    case "csv":
+      return param.map(this.paramToString).join(",");
+    case "ssv":
+      return param.map(this.paramToString).join(" ");
+    case "tsv":
+      return param.map(this.paramToString).join("\t");
+    case "pipes":
+      return param.map(this.paramToString).join("|");
+    case "multi":
       // return the array directly as SuperAgent will handle it as expected
       return param.map(this.paramToString);
     default:
-      throw new Error('Unknown collection format: ' + collectionFormat);
+      throw new Error("Unknown collection format: " + collectionFormat);
   }
 };
 
@@ -279,33 +277,33 @@ exports.prototype.applyAuthToRequest = function(request, authNames) {
   authNames.forEach(function(authName) {
     var auth = _this.authentications[authName];
     switch (auth.type) {
-      case 'basic':
+      case "basic":
         if (auth.username || auth.password) {
-          request.auth(auth.username || '', auth.password || '');
+          request.auth(auth.username || "", auth.password || "");
         }
         break;
-      case 'apiKey':
+      case "apiKey":
         if (auth.apiKey) {
           var data = {};
           if (auth.apiKeyPrefix) {
-            data[auth.name] = auth.apiKeyPrefix + ' ' + auth.apiKey;
+            data[auth.name] = auth.apiKeyPrefix + " " + auth.apiKey;
           } else {
             data[auth.name] = auth.apiKey;
           }
-          if (auth['in'] === 'header') {
+          if (auth["in"] === "header") {
             request.set(data);
           } else {
             request.query(data);
           }
         }
         break;
-      case 'oauth2':
+      case "oauth2":
         if (auth.accessToken) {
-          request.set({'Authorization': 'Bearer ' + auth.accessToken});
+          request.set({ Authorization: "Bearer " + auth.accessToken });
         }
         break;
       default:
-        throw new Error('Unknown authentication type: ' + auth.type);
+        throw new Error("Unknown authentication type: " + auth.type);
     }
   });
 };
@@ -326,7 +324,12 @@ exports.prototype.deserialize = function deserialize(response, returnType) {
   // Rely on SuperAgent for parsing response body.
   // See http://visionmedia.github.io/superagent/#parsing-response-bodies
   var data = response.body;
-  if (data == null || (typeof data === 'object' && typeof data.length === 'undefined' && !Object.keys(data).length)) {
+  if (
+    data == null ||
+    (typeof data === "object" &&
+      typeof data.length === "undefined" &&
+      !Object.keys(data).length)
+  ) {
     // SuperAgent does not always produce a body; use the unparsed response as a fallback
     data = response.text;
   }
@@ -349,10 +352,19 @@ exports.prototype.deserialize = function deserialize(response, returnType) {
  * constructor for a complex type.
  * @returns {Promise} A {@link https://www.promisejs.org/|Promise} object.
  */
-exports.prototype.callApi = function callApi(path, httpMethod, pathParams,
-    queryParams, headerParams, formParams, bodyParam, authNames, contentTypes, accepts,
-    returnType) {
-
+exports.prototype.callApi = function callApi(
+  path,
+  httpMethod,
+  pathParams,
+  queryParams,
+  headerParams,
+  formParams,
+  bodyParam,
+  authNames,
+  contentTypes,
+  accepts,
+  returnType
+) {
   var _this = this;
   var url = this.buildUrl(path, pathParams);
   var request = superagent(httpMethod, url);
@@ -361,8 +373,8 @@ exports.prototype.callApi = function callApi(path, httpMethod, pathParams,
   this.applyAuthToRequest(request, authNames);
 
   // set query parameters
-  if (httpMethod.toUpperCase() === 'GET' && this.cache === false) {
-      queryParams['_'] = new Date().getTime();
+  if (httpMethod.toUpperCase() === "GET" && this.cache === false) {
+    queryParams["_"] = new Date().getTime();
   }
   request.query(this.normalizeParams(queryParams));
 
@@ -375,16 +387,16 @@ exports.prototype.callApi = function callApi(path, httpMethod, pathParams,
   var contentType = this.jsonPreferredMime(contentTypes);
   if (contentType) {
     // Issue with superagent and multipart/form-data (https://github.com/visionmedia/superagent/issues/746)
-    if(contentType != 'multipart/form-data') {
+    if (contentType != "multipart/form-data") {
       request.type(contentType);
     }
-  } else if (!HeaderUtils.caseInsensitiveGet(request.header, 'content-type')) {
-    request.type('application/json');
+  } else if (!HeaderUtils.caseInsensitiveGet(request.header, "content-type")) {
+    request.type("application/json");
   }
 
-  if (contentType === 'application/x-www-form-urlencoded') {
+  if (contentType === "application/x-www-form-urlencoded") {
     request.send(querystring.stringify(this.normalizeParams(formParams)));
-  } else if (contentType == 'multipart/form-data') {
+  } else if (contentType == "multipart/form-data") {
     var _formParams = this.normalizeParams(formParams);
     for (var key in _formParams) {
       if (_formParams.hasOwnProperty(key)) {
@@ -405,18 +417,17 @@ exports.prototype.callApi = function callApi(path, httpMethod, pathParams,
     request.accept(accept);
   }
 
-  if (returnType === 'Blob') {
-    request.responseType('blob');
-  } else if (returnType === 'String') {
-    request.responseType('string');
+  if (returnType === "Blob") {
+    request.responseType("blob");
+  } else if (returnType === "String") {
+    request.responseType("string");
   }
 
   // Attach previously saved cookies, if enabled
-  if (this.enableCookies){
-    if (typeof window === 'undefined') {
+  if (this.enableCookies) {
+    if (typeof window === "undefined") {
       this.agent.attachCookies(request);
-    }
-    else {
+    } else {
       request.withCredentials();
     }
   }
@@ -428,17 +439,17 @@ exports.prototype.callApi = function callApi(path, httpMethod, pathParams,
       } else {
         try {
           var data = _this.deserialize(response, returnType);
-          if (_this.enableCookies && typeof window === 'undefined'){
+          if (_this.enableCookies && typeof window === "undefined") {
             _this.agent.saveCookies(response);
           }
-          resolve({data: data, response: response});
+          resolve({ data: data, response: response });
         } catch (err) {
           reject(err);
         }
       }
     });
   });
-  };
+};
 
 /**
  * Parses an ISO-8601 string representation of a date value.
@@ -446,7 +457,7 @@ exports.prototype.callApi = function callApi(path, httpMethod, pathParams,
  * @returns {Date} The parsed date object.
  */
 exports.parseDate = function(str) {
-  return new Date(str.replace(/T/i, ' '));
+  return new Date(str.replace(/T/i, " "));
 };
 
 /**
@@ -459,27 +470,26 @@ exports.parseDate = function(str) {
  * @returns An instance of the specified type or null or undefined if data is null or undefined.
  */
 exports.convertToType = function(data, type) {
-  if (data === null || data === undefined)
-    return data
+  if (data === null || data === undefined) return data;
 
   switch (type) {
-    case 'Boolean':
+    case "Boolean":
       return Boolean(data);
-    case 'Integer':
+    case "Integer":
       return parseInt(data, 10);
-    case 'Number':
+    case "Number":
       return parseFloat(data);
-    case 'String':
+    case "String":
       return String(data);
-    case 'Date':
+    case "Date":
       return this.parseDate(String(data));
-    case 'Blob':
+    case "Blob":
       return data;
     default:
       if (type === Object) {
         // generic object, return directly
         return data;
-      } else if (typeof type === 'function') {
+      } else if (typeof type === "function") {
         // for model type like: User
         return type.constructFromObject(data);
       } else if (Array.isArray(type)) {
@@ -488,7 +498,7 @@ exports.convertToType = function(data, type) {
         return data.map(function(item) {
           return exports.convertToType(item, itemType);
         });
-      } else if (typeof type === 'object') {
+      } else if (typeof type === "object") {
         // for plain object type like: {'String': 'Integer'}
         var keyType, valueType;
         for (var k in type) {
@@ -533,7 +543,7 @@ exports.constructFromObject = function(data, obj, itemType) {
   }
 };
 
-  /**
+/**
  * The default API client implementation.
  * @type {module:ApiClient}
  */
